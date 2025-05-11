@@ -1,37 +1,45 @@
 ---question 1
----i have first created the table productdetail in paymentsdb
-use paymentsdb;
 CREATE TABLE ProductDetail (
     OrderID INT,
     CustomerName VARCHAR(100),
-    Products VARCHAR(255)
+    Products VARCHAR(100)
 );
+INSERT INTO ProductDetail(OrderID, CustomerName, Products)
+VALUES
+(101, 'John Doe', 'Laptop'),
+(101, 'John Doe', 'Mouse'),
+(102, 'Jane Smith', 'Tablet'),
+(102, 'Jane Smith', 'Keyboard'),
+(102, 'Jane Smith', 'Mouse'),
+(103, 'Emily Clark', 'Phone');
 
-INSERT INTO ProductDetail (OrderID, CustomerName, Products)
-VALUES 
-    (101, 'John Doe', 'Laptop, Mouse'),
-    (102, 'Jane Smith', 'Tablet, Keyboard, Mouse'),
-    (103, 'Emily Clark', 'Phone');
-
-    ----solution 
-    use paymentsdb;
-SELECT OrderID, CustomerName, TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(Products, ',', n.n), ',', -1)) AS Product
-FROM ProductDetail
-JOIN (SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6) n
-    ON CHAR_LENGTH(Products) - CHAR_LENGTH(REPLACE(Products, ',', '')) >= n.n - 1
-ORDER BY OrderID, n.n;
 
 ---question 2
-CREATE TABLE OrderDetails (
-    OrderID INT,
-    Product VARCHAR(100),
-    Quantity INT,
-    PRIMARY KEY (OrderID, Product)
+ CREATE TABLE orders(
+OrderID INT PRIMARY KEY,
+customerName VARCHAR(100)
 );
-INSERT INTO OrderDetails (OrderID, Product, Quantity)
-SELECT OrderID, Product, Quantity
-FROM OrderDetails;
+INSERT INTO orders (OrderID, CustomerName)
+VALUES
+(101, 'John Doe'),
+(102, 'Jane Smith'),
+(103, 'Emily Clark');
 
+-- Product  table 
+CREATE TABLE product(
+product_id INT primary key,
+productName varchar(100),
+quantity INT,
+order_id INT,
+foreign key(order_id) references orders(OrderID)
+);
 
----
+insert into product(product_id,productName,quantity,order_id)
+values 
+(1,'laptop',2,101),
+(2,'Mouse',1,101),
+(3,'Tablet',3,102),
+(4,'Keyboard',2,102),
+(5,'Mouse',1,102),
+(6,'Phone',1,103);
 
